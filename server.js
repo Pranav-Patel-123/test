@@ -18,7 +18,7 @@ app.post("/login", (req, res) => {
 
     if (username === USERNAME && password === PASSWORD) {
         // Generate JWT token
-        const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "12h" });
         return res.json({ token });
     } else {
         return res.status(401).json({ message: "Invalid credentials" });
