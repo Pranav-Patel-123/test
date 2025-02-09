@@ -1,14 +1,18 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
-const SECRET_KEY = "your_secret_key"; // Change this to a strong secret key
+const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; // Use environment variable for security
 
-// Hardcoded credentials
-const USERNAME = "admin";
-const PASSWORD = "password123";
+// Hardcoded credentials (Consider moving these to .env for better security)
+const USERNAME = process.env.ADMIN_USERNAME || "admin";
+const PASSWORD = process.env.ADMIN_PASSWORD || "password123";
 
 app.use(bodyParser.json()); // Middleware to parse JSON request bodies
 
@@ -18,7 +22,7 @@ app.post("/login", (req, res) => {
 
     if (username === USERNAME && password === PASSWORD) {
         // Generate JWT token
-        const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "12h" });
+        const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
         return res.json({ token });
     } else {
         return res.status(401).json({ message: "Invalid credentials" });
