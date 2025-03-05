@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -36,23 +37,24 @@ export default function Login() {
         return;
       }
 
-      // Save JWT token in localStorage
+      // Save JWT token in sessionStorage for security
       if (data.token) {
-        localStorage.setItem("token", data.token);
+        sessionStorage.setItem("token", data.token);
       }
 
-      // Redirect to home page
+      // Redirect to dashboard
       router.push("/dashboard");
-    } catch (err) {
+    } catch (_err) {
+      console.error("Login error:", _err);
       setError("Something went wrong. Please try again.");
       setLoading(false);
     }
-  };
+  }, [email, password, router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <h2 className="text-4xl font-bold mb-6 text-gray-800">Login</h2>
-      <form 
+      <form
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm"
         onSubmit={handleLogin}
       >
@@ -80,7 +82,11 @@ export default function Login() {
           />
         </div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-sm mb-3" aria-live="polite">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
@@ -93,9 +99,9 @@ export default function Login() {
 
       <p className="mt-4 text-gray-700">
         Don't have an account?{" "}
-        <a href="/signup" className="text-blue-500 hover:underline font-semibold">
+        <Link href="/signup" className="text-blue-500 hover:underline font-semibold">
           Sign up
-        </a>
+        </Link>
       </p>
     </div>
   );
