@@ -11,45 +11,48 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const handleLogin = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError("");
+      setLoading(true);
 
-    if (!email || !password) {
-      setError("Both fields are required.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      setLoading(false);
-
-      if (!res.ok) {
-        setError(data.error || "Login failed");
+      if (!email || !password) {
+        setError("Both fields are required.");
+        setLoading(false);
         return;
       }
 
-      // Save JWT token in sessionStorage for security
-      if (data.token) {
-        sessionStorage.setItem("token", data.token);
-      }
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
-      // Redirect to dashboard
-      router.push("/dashboard");
-    } catch (_err) {
-      console.error("Login error:", _err);
-      setError("Something went wrong. Please try again.");
-      setLoading(false);
-    }
-  }, [email, password, router]);
+        const data = await res.json();
+        setLoading(false);
+
+        if (!res.ok) {
+          setError(data.error || "Login failed");
+          return;
+        }
+
+        // Save JWT token in sessionStorage for security
+        if (data.token) {
+          sessionStorage.setItem("token", data.token);
+        }
+
+        // Redirect to dashboard
+        router.push("/dashboard");
+      } catch (_err) {
+        console.error("Login error:", _err);
+        setError("Something went wrong. Please try again.");
+        setLoading(false);
+      }
+    },
+    [email, password, router]
+  );
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
@@ -98,12 +101,11 @@ export default function Login() {
       </form>
 
       <p className="mt-4 text-gray-700">
-  Don&apos;t have an account?{" "}
-  <a href="/signup" className="text-blue-500 hover:underline font-semibold">
-    Sign up
-  </a>
-</p>
-
+        Don&apos;t have an account?{" "}
+        <Link href="/signup" className="text-blue-500 hover:underline font-semibold">
+          Sign up
+        </Link>
+      </p>
     </div>
   );
 }
