@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { email, password } = await req.json();
+    const { email, password }: { email: string; password: string } = await req.json();
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -22,7 +22,8 @@ export async function POST(req: Request) {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
 
     return NextResponse.json({ token, message: "Login successful" }, { status: 200 });
-  } catch (error) {
+  } catch (_error) {
+    console.error("Login error:", _error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
