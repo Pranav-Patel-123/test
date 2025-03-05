@@ -12,13 +12,15 @@ export default function Home() {
       <div className="flex space-x-4">
         <Link
           href="/signup"
-          className="px-6 py-3 text-lg bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-200 font-semibold"
+          aria-label="Sign up for an account"
+          className="px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           Sign Up
         </Link>
         <Link
           href="/login"
-          className="px-6 py-3 text-lg bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-200 font-semibold"
+          aria-label="Log in to your account"
+          className="px-6 py-3 text-lg font-semibold text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
         >
           Log In
         </Link>
